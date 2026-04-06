@@ -1,0 +1,307 @@
+Table persons {
+  person_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK' ]
+  first_name varchar(50) [
+    not null  ]
+  last_name varchar(50) [
+    not null  ]
+  birth_date date
+  personal_id varchar(32) [
+    unique,
+    note: 'AK, NK, CK, SK'  ]
+  email varchar(100) [
+    not null,
+    unique,
+    note: 'AK, NK, CK, SK'  ]}
+
+
+
+Table users {
+  user_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK' ]
+  person_id int [
+    not null,
+    note: 'FK' ]}
+
+
+
+Table employees {
+  employee_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK' ]
+  person_id int [
+    not null,
+    note: 'FK' ]
+  hired_year smallint
+  role varchar(50) [
+    not null ]}
+
+
+
+Table vehicle_types {
+  vehicle_type_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK' ]
+  manufacturer varchar(50) [
+    not null ]
+  model varchar(50) [
+    not null ]
+  car_type varchar(50) [
+    not null ]
+  drive_type varchar(10) [
+    not null ]
+  engine_size numeric(10,1) [
+    not null]
+  average_consumption numeric(6,2) [ 
+    not null]
+  base_fee numeric(10,2) [ 
+    not null]}
+
+
+
+Table vehicles {
+  vehicle_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK' ]
+  vehicle_type_id int [
+    not null,
+    note: 'FK' ]
+  license_plate varchar(15) [
+    not null,
+    unique,
+    note: 'AK, NK, CK, SK' ]
+  production_year smallint [ 
+    not null]}
+
+
+Table reservations {
+  reservation_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  user_id int [
+    not null,
+    note: 'FK'  ]
+  vehicle_id int [
+    not null,
+    note: 'FK'  ]
+  res_start_date timestamp [ 
+    not null]
+  res_end_date timestamp [
+  note: 'CHECK res_end_date is null or res_end_date > res_start_date']}
+
+
+
+Table rate_cards {
+  rate_card_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  vehicle_type_id int [
+    not null,
+    note: 'FK'  ]
+  valid_from timestamp [
+    not null  ]
+  valid_to timestamp [
+  note: 'CHECK valid_to is null or valid_to > valid_from']
+  price_per_minute numeric(10,2) [
+    not null  ]
+  fuel_price numeric(10,2) [
+    not null  ]}
+
+
+
+Table trips {
+  trip_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  reservation_id int [
+    not null,
+    note: 'FK'  ]
+  applied_rate_card_id int [
+    not null,
+    note: 'FK'  ]
+  trips_start_date timestamp [
+    not null  ]
+  trips_end_date timestamp [
+  note: 'CHECK trips_end_date is null or trips_end_date > trips_start_date']
+  distance numeric(10,3)}
+
+
+Table payments {
+  payment_id int [
+    pk,    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  reservation_id int [
+    not null,
+    note: 'FK'  ]
+  employee_id int [
+    note: 'FK'  ]
+  type varchar(50)
+  status varchar(20)
+  currency char(3) [
+    not null,
+    default: 'EUR'  ]
+  amount numeric(10,2) [
+    not null  ]
+  created_at timestamp [
+    not null,
+    default: 'now()'  ]
+  paid_at timestamp}
+
+
+
+Table ratings {
+  rating_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  reservation_id int [
+    not null,
+    note: 'FK'  ]
+  employee_id int [
+    note: 'FK'  ]
+  rating_value int [
+    not null,
+    note: 'CHECK 1..5']
+  comment varchar(200)}
+
+
+
+Table service_orders {
+  service_order_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  employee_id int [
+    not null,
+    note: 'FK'  ]
+  vehicle_id int [
+    not null,
+    note: 'FK'  ]
+  opened_at timestamp [
+    not null  ]
+  closed_at timestamp [note: 
+  'CHECK closed_at is null or closed_at > opened_at' ]
+  type varchar(50) [
+    not null  ]
+  summary varchar(200)}
+
+
+
+Table service_order_employees {
+  service_order_employee_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  service_order_id int [
+    not null,
+    note: 'FK'  ]
+  employee_id int [
+    not null,
+    note: 'FK'  ]
+  role_in_order varchar(50)}
+
+
+Table inspections {
+  inspection_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  service_order_id int [
+    not null,
+    note: 'FK'  ]
+  employee_id int [
+    not null,
+    note: 'FK'  ]
+  performed_at timestamp [
+    not null  ]
+  result varchar(50) [
+    not null  ]
+  summary varchar(200)}
+
+
+
+Table vehicle_status_history {
+  status_history_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  vehicle_id int [
+    not null,
+    note: 'FK'  ]
+  status varchar(30) [
+    not null  ]
+  vehicle_status_valid_from timestamp [
+    not null  ]
+  vehicle_status_valid_to timestamp [
+    not null, 
+    note: 'CHECK vehicle_status_valid_to is null or vehicle_status_valid_to > vehicle_status_valid_from' ]
+  reason varchar(50)}
+
+
+
+Table vehicle_assignment_history {
+  assignment_id int [
+    pk,
+    increment,
+    not null,
+    note: 'PK, SuK, SK'  ]
+  vehicle_id int [
+    not null,
+    note: 'FK'  ]
+  employee_id int [
+    not null,
+    note: 'FK'  ]
+  vehicle_assignment_valid_from timestamp [
+    not null  ]
+  vehicle_assignment_valid_to timestamp [
+    not null, 
+    note: 'CHECK vehicle_assignment_valid_to is null vehicle_assignment_valid_to > vehicle_assignment_valid_from' ]
+  comment varchar(100)}
+
+
+
+Ref: users.person_id > persons.person_id
+Ref: employees.person_id > persons.person_id
+Ref: vehicles.vehicle_type_id > vehicle_types.vehicle_type_id
+Ref: reservations.user_id > users.user_id
+Ref: reservations.vehicle_id > vehicles.vehicle_id
+Ref: trips.reservation_id > reservations.reservation_id
+Ref: trips.applied_rate_card_id > rate_cards.rate_card_id
+Ref: rate_cards.vehicle_type_id > vehicle_types.vehicle_type_id
+Ref: payments.reservation_id > reservations.reservation_id
+Ref: payments.employee_id > employees.employee_id
+Ref: ratings.reservation_id > reservations.reservation_id
+Ref: ratings.employee_id > employees.employee_id
+Ref: service_orders.employee_id > employees.employee_id
+Ref: service_orders.vehicle_id > vehicles.vehicle_id
+Ref: service_order_employees.service_order_id > service_orders.service_order_id
+Ref: service_order_employees.employee_id > employees.employee_id
+Ref: inspections.service_order_id > service_orders.service_order_id
+Ref: inspections.employee_id > employees.employee_id
+Ref: vehicle_status_history.vehicle_id > vehicles.vehicle_id
+Ref: vehicle_assignment_history.vehicle_id > vehicles.vehicle_id
+Ref: vehicle_assignment_history.employee_id > employees.employee_id

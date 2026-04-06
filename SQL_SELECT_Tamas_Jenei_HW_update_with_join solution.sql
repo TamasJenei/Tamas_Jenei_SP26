@@ -654,8 +654,8 @@ FROM (
         -- the biggest inside gap
         MAX(f1.release_year - f2.release_year) AS max_internal_gap
     FROM actor a
-    JOIN film_actor fa1 ON a.actor_id = fa1.actor_id
-    JOIN film f1 ON fa1.film_id = f1.film_id
+    INNER JOIN film_actor fa1 ON a.actor_id = fa1.actor_id
+    INNER JOIN film f1 ON fa1.film_id = f1.film_id
     -- SELF-JOIN: make connection with the previous film
     LEFT JOIN film_actor fa2 ON a.actor_id = fa2.actor_id
     LEFT JOIN film f2 ON fa2.film_id = f2.film_id 
@@ -667,7 +667,7 @@ FROM (
  										* A subquery that refers to the outer query, 
  										* meaning it runs once for each row processed by the outer query.
  										* Used here to filter out non-adjacent film gaps.*/
-            JOIN film f3 ON fa3.film_id = f3.film_id
+            INNER JOIN film f3 ON fa3.film_id = f3.film_id
             WHERE fa3.actor_id = a.actor_id
               AND f3.release_year < f1.release_year
               AND f3.release_year > f2.release_year

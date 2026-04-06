@@ -30,7 +30,7 @@ insert into public.film (title, release_year, language_id, rental_duration, rent
 select
 	'forrest gump',
 	'1994',
-	(select language_id from public.language where lower(name) = 'english'), --dinamic_ID, ensure the right foreign key
+	(select language_id from public.language where lower(name) = 'english'), --dynamic_ID, ensure the right foreign key
 	7,
 	4.99,
 	current_date 
@@ -38,15 +38,14 @@ where not exists (
 	select 1 from public.film where lower(title) = 'forrest gump'
 	) --it is ensure not dupolicate, data uniqness
 returning film_id;
-commit;
+
 
 --second film
-begin;
 insert into public.film (title, release_year, language_id, rental_duration, rental_rate, last_update )--it is possible to filter
 select
 	'downfall',
 	'2004',
-	(select language_id from public.language where lower(name) = 'german'), --dinamic_ID, ensure the right foreign key
+	(select language_id from public.language where lower(name) = 'german'), --dynamic_ID, ensure the right foreign key
 	14,
 	9.99,
 	current_date 
@@ -54,15 +53,13 @@ where not exists (
 	select 1 from public.film where lower(title) = 'downfall'
 	) --it is ensure not dupolicate, data uniqness
 returning film_id;
-commit;
 
 --third film
-begin;
 insert into public.film (title, release_year, language_id, rental_duration, rental_rate, last_update )--it is possible to filter
 select
 	'james bond casino royale',
 	'2006',
-	(select language_id from public.language where lower(name) = 'english'), --dinamic_ID, ensure the right foreign key
+	(select language_id from public.language where lower(name) = 'english'), --dynamic_ID, ensure the right foreign key
 	21,
 	19.99,
 	current_date 
@@ -88,12 +85,11 @@ where not exists (
 	from public.actor 
 	where lower(first_name) = 'tom' and lower(last_name) = 'hanks')
 returning actor_id;	
-commit;
 
-begin; --if the transaction fail between begin and commit all the modification will be unvalid
+--if the transaction fail between begin and commit all the modification will be unvalid
 insert into public.film_actor(actor_id, film_id, last_update)
 select 
-(select actor_id from public.actor where first_name = 'tom' and last_name = 'hanks'), --reference ID search, dinamic mode
+(select actor_id from public.actor where lower(first_name) = 'tom' and lower(last_name) = 'hanks'), --reference ID search, dynamic mode
 (select film_id from public.film where film.title = 'forrest gump'), --reference ID search, integrity
 current_date 
 where not exists (   --data uniqness
@@ -103,11 +99,9 @@ where not exists (   --data uniqness
 		and film_id = (select film_id from public.film where film.title = 'forrest gump')
 		)
 returning*;
-commit;
 
 
 --second actress
-begin;
 insert into public.actor (first_name , last_name, last_update)
 select 
 	'robin',
@@ -118,12 +112,11 @@ where not exists (
 	from public.actor 
 	where lower(first_name) = 'robin' and lower(last_name) = 'wright')
 returning actor_id;	
-commit;
 
-begin; --if the transaction fail between begin and commit all the modification will be unvalid
+--if the transaction fail between begin and commit all the modification will be unvalid
 insert into public.film_actor(actor_id, film_id, last_update)
 select 
-(select actor_id from public.actor where first_name = 'robin' and last_name = 'wright'), --reference ID search, dinamic mode
+(select actor_id from public.actor where first_name = 'robin' and last_name = 'wright'), --reference ID search, dynamic mode
 (select film_id from public.film where film.title = 'forrest gump'), --reference ID search, integrity
 current_date 
 where not exists (   --data uniqness
@@ -133,10 +126,8 @@ where not exists (   --data uniqness
 		and film_id = (select film_id from public.film where film.title = 'forrest gump')
 		)
 returning*;
-commit;
 
 --third actor
-begin;
 insert into public.actor (first_name , last_name, last_update)
 select 
 	'bruno',
@@ -147,12 +138,11 @@ where not exists (
 	from public.actor 
 	where lower(first_name) = 'bruno' and lower(last_name) = 'ganz')
 returning actor_id;	
-commit;
 
-begin; --if the transaction fail between begin and commit all the modification will be unvalid
+--if the transaction fail between begin and commit all the modification will be unvalid
 insert into public.film_actor(actor_id, film_id, last_update)
 select 
-(select actor_id from public.actor where first_name = 'bruno' and last_name = 'ganz'), --reference ID search, dinamic mode
+(select actor_id from public.actor where first_name = 'bruno' and last_name = 'ganz'), --reference ID search, dynamic mode
 (select film_id from public.film where film.title = 'downfall'), --reference ID search, integrity
 current_date 
 where not exists (   --data uniqness
@@ -162,10 +152,8 @@ where not exists (   --data uniqness
 		and film_id = (select film_id from public.film where film.title = 'downfall')
 		)
 returning*;
-commit;
 
 --fourth actor
-begin;
 insert into public.actor (first_name , last_name, last_update)
 select 
 	'ulrich',
@@ -176,12 +164,11 @@ where not exists (
 	from public.actor 
 	where lower(first_name) = 'ulrich' and lower(last_name) = 'matthes')
 returning actor_id;	
-commit;
 
-begin; --if the transaction fail between begin and commit all the modification will be unvalid
+--if the transaction fail between begin and commit all the modification will be unvalid
 insert into public.film_actor(actor_id, film_id, last_update)
 select 
-(select actor_id from public.actor where first_name = 'ulrich' and last_name = 'matthes'), --reference ID search, dinamic mode
+(select actor_id from public.actor where first_name = 'ulrich' and last_name = 'matthes'), --reference ID search, dynamic mode
 (select film_id from public.film where film.title = 'downfall'), --reference ID search, integrity
 current_date 
 where not exists (   --data uniqness
@@ -191,10 +178,8 @@ where not exists (   --data uniqness
 		and film_id = (select film_id from public.film where film.title = 'downfall')
 		)
 returning*;
-commit;
 
 --fifth actor
-begin;
 insert into public.actor (first_name , last_name, last_update)
 select 
 	'daniel',
@@ -205,12 +190,11 @@ where not exists (
 	from public.actor 
 	where lower(first_name) = 'daniel' and lower(last_name) = 'craig')
 returning actor_id;	
-commit;
 
-begin; --if the transaction fail between begin and commit all the modification will be unvalid
+ --if the transaction fail between begin and commit all the modification will be unvalid
 insert into public.film_actor(actor_id, film_id, last_update)
 select 
-(select actor_id from public.actor where first_name = 'daniel' and last_name = 'craig'), --reference ID search, dinamic mode
+(select actor_id from public.actor where first_name = 'daniel' and last_name = 'craig'), --reference ID search, dynamic mode
 (select film_id from public.film where film.title = 'james bond casino royale'), --reference ID search, integrity
 current_date 
 where not exists (   --data uniqness
@@ -220,10 +204,8 @@ where not exists (   --data uniqness
 		and film_id = (select film_id from public.film where film.title = 'james bond casino royale')
 		)
 returning*;
-commit;
 
 --sixth actress
-begin;
 insert into public.actor (first_name , last_name, last_update)
 select 
 	'eva',
@@ -234,12 +216,11 @@ where not exists (
 	from public.actor 
 	where lower(first_name) = 'eva' and lower(last_name) = 'green')
 returning actor_id;	
-commit;
 
-begin; --if the transaction fail between begin and commit all the modification will be unvalid
+ --if the transaction fail between begin and commit all the modification will be unvalid
 insert into public.film_actor(actor_id, film_id, last_update)
 select 
-(select actor_id from public.actor where first_name = 'eva' and last_name = 'green'), --reference ID search, dinamic mode
+(select actor_id from public.actor where first_name = 'eva' and last_name = 'green'), --reference ID search, dynamic mode
 (select film_id from public.film where film.title = 'james bond casino royale'), --reference ID search, integrity
 current_date 
 where not exists (   --data uniqness
@@ -278,10 +259,8 @@ where not exists ( --check that this film exist in this shop
        and store_id =(select store_id from public.store limit 1)
       )
 returning inventory_id;
-commit;
 
 --second movie
-begin;
 insert into public.inventory (film_id, store_id, last_update)
 select
 	(select film_id from public.film where lower(title) = 'downfall' limit 1),
@@ -293,10 +272,8 @@ where not exists ( --check that this film exist in this shop
        and store_id =(select store_id from public.store limit 1)
       )
 returning inventory_id;
-commit;
 
 --third movie
-begin;
 insert into public.inventory (film_id, store_id, last_update)
 select
 	(select film_id from public.film where lower(title) = 'james bond casino royale' limit 1),
@@ -336,8 +313,8 @@ select
     count(distinct r.rental_id) as rental_count, 
     count(distinct p.payment_id) as payment_count
 from public.customer c
-join public.rental r on c.customer_id = r.customer_id
-join public.payment p on c.customer_id = p.customer_id
+inner join public.rental r on c.customer_id = r.customer_id
+inner join public.payment p on c.customer_id = p.customer_id
 group by c.customer_id, c.first_name, c.last_name
 having count(distinct r.rental_id) >= 43 
    and count(distinct p.payment_id) >= 43
@@ -361,7 +338,7 @@ set
     email = 'tamas.jenei967@gmail.com',
     address_id = 10,                   -- my choosen address ID
     last_update = current_date
-where customer_id = 75;                -- Tammy Sanders original ID
+where lower(first_name) = 'tammy' and lower(last_name) = 'sanders';                -- Tammy Sanders original ID
 commit;
 
 /*Remove any records related to you (as a customer) from all tables except 'Customer' and 'Inventory'*/
@@ -369,22 +346,22 @@ commit;
 begin;
 -- 1. payment delete
 delete from public.payment
-where customer_id = 75
+where customer_id=(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei')
 returning *;
 -- 2. rental delete
 delete from public.rental
-where customer_id = 75
+where customer_id=(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei')
 returning *;
 commit;
 --checking my delete work
 select * 
 from public.payment
-where customer_id = 75;
+where customer_id=(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei');
 select * 
 from public.rental
-where customer_id = 75
+where customer_id=(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei')
 /*--Why deleting is safe: Deleting from payment and rental is safe because these are child tables of customer. 
- * By filtering strictly for customer_id = 75, we only remove the history of the modified customer without affecting other users.
+ * By filtering strictly for customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), we only remove the history of the modified customer without affecting other users.
 --Referential Integrity: The deletion order follows the hierarchy: first we remove the payments, then the rentals.
 This prevents "Foreign Key constraint" errors.*/
 
@@ -405,25 +382,25 @@ select
                           from public.film 
                           where lower(title)= 'forrest gump' limit 1 )
    limit 1),
-   75, --customer_id
-   --dinamic redemption date
+   (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), --customer_id
+   --dynamic redemption date
    '2017-03-30 10:00:00'::timestamp + (select rental_duration * interval '1 day' from public.film where lower(title) = 'forrest gump' limit 1), -- rental date day
    (select staff_id 
-      from public.staff limit 1), --dinamikus staff_id
+      from public.staff limit 1), --dynamic staff_id
    current_date 
  where not exists ( --Recurrence: we do not rent the same inventory at the same time
     select 1 from public.rental 
-    where customer_id =75 and rental_date = '2017-03-30 10:00:00'::timestamp )
+    where customer_id =(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:00:00'::timestamp )
   returning rental_id;
 --Second I record the payment
 --create connect with the rental
 insert into public.payment (customer_id, staff_id, rental_id, amount, payment_date)
 select 
-    75, 
+    (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), 
     (select staff_id from public.staff limit 1),
     -- search the rental id
     (select rental_id from public.rental 
-     where customer_id = 75 and rental_date = '2017-03-30 10:00:00'::timestamp limit 1),
+     where customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:00:00'::timestamp limit 1),
     -- dynamic price base on film title
     (select rental_rate from public.film where lower(title) = 'forrest gump' limit 1),
     -- payment date is the same as the rental
@@ -431,14 +408,14 @@ select
 where not exists (
     select 1 from public.payment
     where rental_id = (select rental_id from public.rental 
-                       where customer_id = 75 and rental_date = '2017-03-30 10:00:00'::timestamp limit 1)
+                       where customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:00:00'::timestamp limit 1)
 )
 returning *;
- commit;
+
 
 
 --Second film
-begin;
+
 --first I record the rental 
 insert into public.rental (rental_date, inventory_id, customer_id, return_date, staff_id, last_update )
 select
@@ -448,25 +425,25 @@ select
                           from public.film 
                           where lower(title)= 'downfall' limit 1 )
    limit 1),
-   75, --customer_id
-   --dinamic redemption date
+   (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), --customer_id
+   --dynamic redemption date
    '2017-03-30 10:15:00'::timestamp + (select rental_duration * interval '1 day' from public.film where lower(title) = 'downfall' limit 1), -- rental date day
    (select staff_id 
-      from public.staff limit 1), --dinamikus staff_id
+      from public.staff limit 1), --dynamic staff_id
    current_date 
  where not exists ( --Recurrence: we do not rent the same inventory at the same time
     select 1 from public.rental 
-    where customer_id =75 and rental_date = '2017-03-30 10:15:00'::timestamp )
+    where customer_id =(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:15:00'::timestamp )
   returning rental_id;
 --Second I record the payment
 --create connect with the rental
 insert into public.payment (customer_id, staff_id, rental_id, amount, payment_date)
 select 
-    75, 
+    (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), 
     (select staff_id from public.staff limit 1),
     -- search the rental id
     (select rental_id from public.rental 
-     where customer_id = 75 and rental_date = '2017-03-30 10:15:00'::timestamp limit 1),
+     where customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:15:00'::timestamp limit 1),
     -- dynamic price base on film title
     (select rental_rate from public.film where lower(title) = 'downfall' limit 1),
     -- payment date is the same as the rental
@@ -474,13 +451,12 @@ select
 where not exists (
     select 1 from public.payment
     where rental_id = (select rental_id from public.rental 
-                       where customer_id = 75 and rental_date = '2017-03-30 10:15:00'::timestamp limit 1)
+                       where customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:15:00'::timestamp limit 1)
 )
 returning *;
- commit;
 
 --Third film
-begin;
+
 --first I record the rental 
 insert into public.rental (rental_date, inventory_id, customer_id, return_date, staff_id, last_update )
 select
@@ -490,25 +466,25 @@ select
                           from public.film 
                           where lower(title)= 'james bond casino royale' limit 1 )
    limit 1),
-   75, --customer_id
-   --dinamic redemption date
+   (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), --customer_id
+   --dynamic redemption date
    '2017-03-30 10:10:00'::timestamp + (select rental_duration * interval '1 day' from public.film where lower(title) = 'james bond casino royale' limit 1), -- rental date day
    (select staff_id 
-      from public.staff limit 1), --dinamikus staff_id
+      from public.staff limit 1), --dynamic staff_id
    current_date 
  where not exists ( --Recurrence: we do not rent the same inventory at the same time
     select 1 from public.rental 
-    where customer_id =75 and rental_date = '2017-03-30 10:10:00'::timestamp )
+    where customer_id =(SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:10:00'::timestamp )
   returning rental_id;
 --Second I record the payment
 --create connect with the rental
 insert into public.payment (customer_id, staff_id, rental_id, amount, payment_date)
 select 
-    75, 
+    (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei'), 
     (select staff_id from public.staff limit 1),
     -- search the rental id
     (select rental_id from public.rental 
-     where customer_id = 75 and rental_date = '2017-03-30 10:10:00'::timestamp limit 1),
+     where customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:10:00'::timestamp limit 1),
     -- dynamic price base on film title
     (select rental_rate from public.film where lower(title) = 'james bond casino royale' limit 1),
     -- payment date is the same as the rental
@@ -516,7 +492,7 @@ select
 where not exists (
     select 1 from public.payment
     where rental_id = (select rental_id from public.rental 
-                       where customer_id = 75 and rental_date = '2017-03-30 10:10:00'::timestamp limit 1)
+                       where customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei') and rental_date = '2017-03-30 10:10:00'::timestamp limit 1)
 )
 returning *;
  commit;
@@ -526,11 +502,11 @@ returning *;
 --checking query
 select c.first_name, c.last_name, f.title, r.rental_date, r.return_date , p.amount, p.payment_date 
 from public.customer c
-join public.rental r on c.customer_id = r.customer_id
-join public.inventory i on r.inventory_id = i.inventory_id
-join public.film f on i.film_id = f.film_id
-join public.payment p on r.rental_id = p.rental_id
-where c.customer_id = 75;
+inner join public.rental r on c.customer_id = r.customer_id
+inner join public.inventory i on r.inventory_id = i.inventory_id
+inner join public.film f on i.film_id = f.film_id
+inner join public.payment p on r.rental_id = p.rental_id
+where c.customer_id = (SELECT customer_id from public.customer where lower(first_name) = 'tamas' and lower(last_name) = 'jenei');
 
 
 

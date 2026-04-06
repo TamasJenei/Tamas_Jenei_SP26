@@ -1,6 +1,13 @@
-CREATE TABLE table_to_delete AS
-SELECT 'veeeeeeery_long_string' || x AS col
-FROM generate_series(1,(10^7)::int) x;
+-- create table if it's not exist
+CREATE TABLE IF NOT EXISTS table_to_delete (
+    col TEXT
+);
+
+-- only fill in with data if it's empty
+INSERT INTO table_to_delete (col)
+SELECT 'veeeeeeery_long_string' || x 
+FROM generate_series(1, (10^7)::int) x
+WHERE NOT EXISTS (SELECT 1 FROM table_to_delete LIMIT 1);
 
 SELECT *, pg_size_pretty(total_bytes) AS total,
           pg_size_pretty(index_bytes) AS INDEX,
@@ -32,10 +39,10 @@ WHERE REPLACE(col, 'veeeeeeery_long_string','')::int % 3 = 0; -- removes 1/3 of 
 VACUUM FULL VERBOSE table_to_delete;
 
 
-DROP TABLE table_to_delete;
+DROP TABLE IF EXISTS table_to_delete;
 CREATE TABLE table_to_delete AS
 SELECT 'veeeeeeery_long_string' || x AS col
-FROM generate_series(1,(10^7)::int) x;
+FROM generate_series(1, (10^7)::int) x;
 
 TRUNCATE table_to_delete;
 
